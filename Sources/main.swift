@@ -13,12 +13,15 @@ dump(CommandLine.arguments)
 #endif
 
 
-func main(_ args: [String]) -> Int32 {
-    for arg in args {
-        print(" -> \(arg)")
-    }
-    return 0
-}
+let parser = ArgumentParser(CommandLine.arguments)
+parser.docString = "render the current scene"
+
+let fn = StringOption(named: "filename", flag: "f", required: true, helpString: "output file name", defaultValue: "temp")
+let wo = IntegerOption(named: "width", flag: "w", required: false, helpString: "output width", defaultValue: 960)
+let ho = IntegerOption(named: "height", flag: "h", required: true, helpString: "output height", defaultValue: 540)
+let sm = IntegerOption(named: "samples", flags: "s", "ns", required: true, helpString: "render samples", defaultValue: 10)
+let db = BoolOption(named: "debug")
 
 
-exit(main(CommandLine.arguments))
+parser.addOptions(wo, ho, sm, fn, db)
+parser.help()
