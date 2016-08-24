@@ -15,20 +15,16 @@
 import Foundation
 
 
-public enum OptionGroup {
-    case positional
-    case options
-    case actions
-    case multi
-}
-
-
 public enum OptionType {
     case string
     case bool
     case integer
     case double
     case path
+    case multiString
+    case multiInteger
+    case multiDouble
+    case multiPath
 }
 
 
@@ -41,45 +37,71 @@ public enum NumArgs: String {
 
 // MARK: - Option Classes
 
-/// Option base class
+/// Option base class. Not intended to be used directly.
 open class Option {
-    open var name: String
-    open var flags: [String] = []
-    open var helpString: String? = nil
+    open var _name: String                          // option name
+    open var flags: [String] = []                   // option flags (short names)
+    open var helpString: String? = nil              // optional help string
     open var metavar: String? = nil                 // description of the value type in usage (ie: path, input)
-    open var isRequired: Bool = false               // is the option required?
-    open var group: OptionGroup = .options          // Group type in help message.
+    open var _isRequired: Bool = false              // is the option required?
     open var nargs: Int = 1                         // max number of values allowed (? - 1 value, or default)
                                                     //                              (* - args are split into list)
                                                     //                              (+ - same as *, but requires 1)
+    
+    
+    /// Indicates that the option has a value(s) assigned
+    open var name: String {
+        return _name.hasPrefix(shortPrefix) ? _name.components(separatedBy: shortPrefix).last! : _name
+    }
+    
+    /// Indicates that the option has a value(s) assigned
     open var hasValue: Bool {
         return false
     }
     
+    /// Returns true if the option has a valid value.
+    open var isSatisfied: Bool {
+        return false
+    }
+
+    /// Indicates that an option is positional
+    open var isPositional: Bool {
+        return flags.isEmpty && !_name.hasPrefix(shortPrefix)
+    }
+    
+    /// Indicates that an option is required to have a value.
+    open var isRequired: Bool {
+        return _isRequired == true || isPositional == true
+    }
+    
+    /// Returns a string with all of the current flags 
     open var flagsString: String? {
         return (flags.count != 0) ? flags.map {"-\($0)"}.joined(separator: ", ") : nil
     }
     
+    /// Returns a string describing the option's usage instructions
+    // ie: `-f --filename`
     open var usageString: String {
-        let shortUsage = (flagsString == nil) ? "" : "\(flagsString!) "
-        let metaFlag = metavar == nil ? "" : "  <\(metavar!)> "
-        return "\(shortUsage)--\(name)\(metaFlag)"
+        let shortUsage = (flagsString == nil) ? "" : "\(flagsString!), "
+        let namePrefix = (isPositional == false) ? "--" : ""
+        return "\(shortUsage)\(namePrefix)\(name)"
     }
     
+    // MARK: - Init
     public init(named: String, flag: String?=nil, required: Bool=false, helpString: String?=nil) {
-        self.name = named.replacingOccurrences(of: " ", with: "-")
+        self._name = named.replacingOccurrences(of: " ", with: "-")
         
         if let flagArg = flag {
             self.flags.append(flagArg)
         }
-        self.isRequired = required
+        self._isRequired = required
         self.helpString = helpString
     }
     
     public init(named: String, flags: [String], required: Bool=false, helpString: String?=nil) {
-        self.name = named.replacingOccurrences(of: " ", with: "-")
+        self._name = named.replacingOccurrences(of: " ", with: "-")
         self.flags = flags.uniqueElements
-        self.isRequired = required
+        self._isRequired = required
         self.helpString = helpString
     }
     
@@ -93,6 +115,7 @@ open class Option {
 }
 
 
+/// Basic string option.
 open class StringOption: Option {
     internal var _value: String? = nil
     internal var _default: String? = nil
@@ -102,6 +125,11 @@ open class StringOption: Option {
     }
     
     override open var hasValue: Bool {
+        return value != nil
+    }
+    
+    override open var isSatisfied: Bool {
+        // TODO: expand this for multi-values
         return value != nil
     }
     
@@ -136,16 +164,28 @@ open class StringOption: Option {
     }
 }
 
-
+/// Boolean option
+///  - Can only have one value
 open class BoolOption: Option {
     internal var _value: Bool = false
+    override open var nargs: Int {
+        didSet {
+            if nargs > 1 {
+                nargs = 1
+            }
+        }
+    }
     
     open var value: Bool {
         return _value
     }
     
     override open var hasValue: Bool {
-        return false
+        return value == true
+    }
+    
+    override open var isSatisfied: Bool {
+        return true
     }
     
     override public func setValue(_ values: String...) -> Bool {
@@ -172,6 +212,11 @@ open class IntegerOption: Option {
     }
     
     override open var hasValue: Bool {
+        return value != nil
+    }
+    
+    override open var isSatisfied: Bool {
+        // TODO: expand this for multi-values
         return value != nil
     }
     
@@ -219,6 +264,11 @@ open class DoubleOption: Option {
         return value != nil
     }
     
+    override open var isSatisfied: Bool {
+        // TODO: expand this for multi-values
+        return value != nil
+    }
+    
     public convenience init(named: String, flag: String?, required: Bool, helpString: String?, defaultValue: Double?=nil) {
         self.init(named: named, flag: flag, required: required, helpString: helpString)
         self._default = defaultValue
@@ -254,6 +304,11 @@ open class DoubleOption: Option {
 open class PathOption: StringOption {
     internal static var fileManager = FileManager.default
     
+    override open var isSatisfied: Bool {
+        // TODO: expand this to indicate that the url dirname is valud
+        return value != nil
+    }
+    
     public var url: URL? {
         return value != nil ? URL(fileURLWithPath: value!) : nil
     }
@@ -272,7 +327,6 @@ open class PathOption: StringOption {
 
 
 // MARK: - Extensions
-
 extension OptionType {
     /// Return the appropriate option type.
     public var option: Any {
@@ -280,25 +334,29 @@ extension OptionType {
         case .bool:
             return BoolOption.self
             
-        case .string:
+        case .string, .multiString:
             return StringOption.self
             
-        case .integer:
+        case .integer, .multiInteger:
             return IntegerOption.self
             
-        case .double:
+        case .double, .multiDouble:
             return DoubleOption.self
             
-        case .path:
+        case .path, .multiPath:
             return PathOption.self
-        }
         
+        default:
+            return StringOption.self
     }
+}
 }
 
 
 public func == (lhs: Option, rhs: String) -> Bool {
-    return lhs.name == rhs || lhs.flagsString ?? "~" == rhs
+    let parsedName = lhs.name.hasPrefix(shortPrefix) ? lhs.name.components(separatedBy: shortPrefix).last! : lhs.name
+    let flagName = rhs.hasPrefix(shortPrefix) ? rhs.components(separatedBy: shortPrefix).last! : rhs
+    return parsedName == flagName || lhs.flagsString ?? "~" == flagName || lhs.flags.contains(flagName)
 }
 
 
@@ -306,8 +364,12 @@ public func == (lhs: Option, rhs: Option) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
 
+
 extension Option: Hashable {
-    public var hashValue: Int { return name.hashValue }
+    public var hashValue: Int {
+        let parsedName = name.hasPrefix(shortPrefix) ? name.components(separatedBy: shortPrefix).last! : name
+        return parsedName.hashValue
+    }
 }
 
 

@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C9DB9041E7FED490024EC28 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4CB79DDE1E7AE6F6001C8941 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -49,15 +50,15 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
+				4C9DB9041E7FED490024EC28 /* README.md */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_13 /* Tests */,
 				OBJ_14 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -122,7 +123,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
