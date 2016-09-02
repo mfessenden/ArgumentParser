@@ -32,16 +32,18 @@ parser.addOptions(wo, ho, so, fo, go)
 // 2 - command-line usage error
 func main() -> Int32 {
     do {
-        try parser.parse()
+        let parsedArgs = try parser.parse()
         if parser.isValid {
-            print("# Parsing succeeded.")
             return 0
         }
     } catch {
-        print("# Something went wrong.")
+        print("# Parsing error.")
+        parser.dump()
         return 1
     }
-    print("# Something went wrong.")
+    print("\n# Error: parser not satisfied: ")
+    print("  " + parser.usageString)
+    parser.dump()
     return 1
 }
 

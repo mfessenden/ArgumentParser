@@ -9,11 +9,24 @@
 import Cocoa
 
 
-enum ParsingError: Error {
-    case invalidValueType
+enum ParsingError: Error, CustomStringConvertible {
+    case invalidValueType(option: String, optIndex: Int)
     case missingOptions(options: [String])
     case conflictingOption(option: String)
+    
+    public var description: String {
+        switch self {
+        case let .invalidValueType(option, optIndex):
+            return "Invalid argument type: \(option) at index: \(optIndex)"
+        case let .missingOptions(options):
+            let optionsString = options.joined(separator: ", ")
+            return "Missing required options: \(optionsString)."
+        case let .conflictingOption(option):
+            return "Conflicting option: \(option)"
+        }
+    }
 }
+
 
 
 public let shortPrefix = "-"
@@ -32,6 +45,8 @@ open class ArgumentParser {
     open var docString: String = "(No description)"
     open var usage: String? = nil
     
+    var _helpMode: Bool = false
+    
     /// Formatted help string.
     open var helpString: String {
         let hasOptions: Bool = options.count > 0
@@ -39,8 +54,12 @@ open class ArgumentParser {
         let positionalCount = positionalOptions.count
         
         
-        var optionalString = (optionalCount > 0) ? "\n\nOPTIONAL ARGUMENTS: \n" : "\n\nOPTIONAL ARGUMENTS: (None)\n"
-        var positionalString = (positionalCount > 0) ? "\n\nPOSITIONAL ARGUMENTS: \n" : "\n"
+        let optFormattedString = "OPTIONAL ARGUMENTS".ansiFormatted(color: .none, style: .underline)
+        let posFormattedString = "POSITIONAL ARGUMENTS".ansiFormatted(color: .none, style: .underline)
+        
+        var optionalString = (optionalCount > 0) ? "\n\n\(optFormattedString): \n" : "\n\n\(optFormattedString): (None)\n"
+        var positionalString = (positionalCount > 0) ? "\n\n\(posFormattedString): \n" : "\n"
+        
         
         let optionStrings = options.map { $0.usageString }
         
@@ -65,12 +84,21 @@ open class ArgumentParser {
                 positionalString += usageString
             }
         }
-        return "\nOVERVIEW:  \(docString)\n\nUSAGE:  \(usageString)\(positionalString)\(optionalString)"
+        
+        
+        let overviewCodedString = "OVERVIEW".ansiFormatted(color: .none, style: .underline)
+        let usageCodedString = "USAGE".ansiFormatted(color: .none, style: .underline)
+        
+        return "\n\(overviewCodedString):  \(docString)\n\n\(usageCodedString):  \(usageString)\(positionalString)\(optionalString)\n"
     }
     
     open var usageString: String {
         if let usage = usage { return usage }
-        var result: String = self._executable ?? "(none)"
+        
+        // executable name
+        let execFormattedString: String = self._executable.ansiFormatted(color: .none, style: .bold) ?? "(none)".ansiFormatted(color: .none, style: .bold)
+        
+        var result: String = execFormattedString
         for option in options {
             // skip help
             if option == "help" { continue }
@@ -81,6 +109,7 @@ open class ArgumentParser {
     }
     
     // MARK: - Init
+    
     public init(_ args: [String]) {
         _rawArgs = args
         _executable = args.first
@@ -94,10 +123,10 @@ open class ArgumentParser {
     }
     
     // MARK: - Parsing
-    open func parse(_ args: [String]) throws {
+    open func parse(_ args: [String]) throws -> [String: Any] {
         _rawArgs = args
         _executable = args.first
-        try parse()
+        return try parse()
     }
             
     
@@ -125,9 +154,10 @@ open class ArgumentParser {
     }
     
     public func help() {
+        _helpMode = true
         print(helpString)
     }
-    }
+}
 
 
 extension ArgumentParser: CustomStringConvertible, CustomDebugStringConvertible {
@@ -172,12 +202,8 @@ extension ArgumentParser {
     
     /// Returns true if the parser has all required options satisfied.
     public var isValid: Bool {
-        for option in options {
-            if option.isSatisfied == false {
-                return false
-            }
-        }
-        return true
+        if (_helpMode == true) { return true }
+        return !options.map { $0.isValid }.contains(false)
     }
 }
 
@@ -223,13 +249,17 @@ extension ArgumentParser {
         return values
     }
     
-    open func parse() throws {
+    /**
+      Main parse method.
+     */
+    open func parse() throws -> [String: Any] {
+        var result: [String: Any] = [:]
         let nargs = _rawArgs.dropFirst()
         
         var cnt = 0
         var matchedArgs: [String] = []
         var unmatchedArgs: [String] = []
-
+        
         for (idx, arg) in nargs.enumerated() {
             
             if ["--help", "-h"].contains(arg.lowercased()) {
@@ -248,7 +278,7 @@ extension ArgumentParser {
             if let option = getOption(named: arg) {
                 matchedArgs.append(arg)
                 let fvalues = getFlagsAfterIndex(idx + 1)
-                print("  -> option: \"\(option.name)\": \(fvalues)")
+                print("  → option: \"\(option.name)\": \(fvalues)")
                 if let stringOption = option as? StringOption {
                     for value in fvalues {
                         stringOption.setValue(value)
@@ -286,17 +316,18 @@ extension ArgumentParser {
             }
         }
         
+        if _helpMode == true { return [:] }
+        
         
         for (nidx, narg) in nargs.enumerated() {
             if !matchedArgs.contains(narg) {
                 
                 let option = options[nidx]
                 if !option.isPositional {
-                    print("# Error: option \"\(option.name)\" at index \(nidx) is not positional.")
-                    return
+                    throw ParsingError.invalidValueType(option: option.name, optIndex: nidx)
                 }
                 
-                print("  -> option: \(option.name): \(narg)")
+                print("  → option: \(option.name): \(narg)")
                 if let stringOption = option as? StringOption {
                     stringOption.setValue(narg)
                 }
@@ -318,6 +349,16 @@ extension ArgumentParser {
                 }
                 
             }
+        }
+        
+        return result
+    }
+    
+    
+    open func dump() {
+        print("\n# Debug:")
+        for option in options {
+            print(option.debugDescription)
         }
     }
 }

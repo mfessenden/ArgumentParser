@@ -5,17 +5,11 @@
 //  Created by Michael Fessenden on 8/23/16.
 //
 
-//
-//  Option.swift
-//  ArgumentParser
-//
-//  Created by Michael Fessenden on 2/12/17.
-//
-
 import Foundation
 
 
 public enum OptionType {
+    case none
     case string
     case bool
     case integer
@@ -39,6 +33,9 @@ public enum NumArgs: String {
 
 /// Option base class. Not intended to be used directly.
 open class Option {
+    open var type: OptionType {
+        return .none
+    }
     open var _name: String                          // option name
     open var flags: [String] = []                   // option flags (short names)
     open var helpString: String? = nil              // optional help string
@@ -72,6 +69,12 @@ open class Option {
     /// Indicates that an option is required to have a value.
     open var isRequired: Bool {
         return _isRequired == true || isPositional == true
+    }
+    
+    /// Indicates that the option can be processed.
+    open var isValid: Bool {
+        guard type != .none else { return false }
+        return (isSatisfied == true) ? true : (isRequired == true) ? false : true
     }
     
     /// Returns a string with all of the current flags 
@@ -117,6 +120,9 @@ open class Option {
 
 /// Basic string option.
 open class StringOption: Option {
+    override open var type: OptionType {
+        return .string
+    }
     internal var _value: String? = nil
     internal var _default: String? = nil
     
@@ -167,6 +173,9 @@ open class StringOption: Option {
 /// Boolean option
 ///  - Can only have one value
 open class BoolOption: Option {
+    override open var type: OptionType {
+        return .bool
+    }
     internal var _value: Bool = false
     override open var nargs: Int {
         didSet {
@@ -204,6 +213,9 @@ open class BoolOption: Option {
 
 
 open class IntegerOption: Option {
+    override open var type: OptionType {
+        return .integer
+    }
     internal var _value: Int? = nil
     internal var _default: Int? = nil
     
@@ -253,6 +265,9 @@ open class IntegerOption: Option {
 
 
 open class DoubleOption: Option {
+    override open var type: OptionType {
+        return .double
+    }
     internal var _value: Double? = nil
     internal var _default: Double? = nil
     
@@ -302,6 +317,10 @@ open class DoubleOption: Option {
 
 
 open class PathOption: StringOption {
+    
+    override open var type: OptionType {
+        return .path
+    }
     internal static var fileManager = FileManager.default
     
     override open var isSatisfied: Bool {
@@ -348,8 +367,8 @@ extension OptionType {
         
         default:
             return StringOption.self
+        }
     }
-}
 }
 
 
@@ -375,7 +394,21 @@ extension Option: Hashable {
 
 extension Option: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String { return usageString }
-    public var debugDescription: String { return description }
+    public var debugDescription: String {
+        
+        var result = (isValid == true) ? " \(self.name) (\(self.type))" : "*\(self.name) (\(self.type))"
+        
+        result += ":  positional: \(self.isPositional)"
+        result += ", required: \(self.isRequired)"
+        
+        
+        let style: ANSIStyle = (isSatisfied == true) ? .none : (isRequired == true) ? .bold : .none
+        let color: ANSIColor = (isSatisfied == true) ? .none : (isRequired == true) ? .red : .none
+        let satisfiedDesc = "\(self.isSatisfied)".ansiFormatted(color: color, style: style)
+        
+        result += ", satisfied: \(satisfiedDesc)"
+        return result
+    }
 }
 
 

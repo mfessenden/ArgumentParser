@@ -5,8 +5,36 @@
 //  Created by Michael Fessenden on 8/22/16.
 //  Copyright © 2016 Michael Fessenden. All rights reserved.
 //
+//  ANSI Formatting reference:
+//  http://stackoverflow.com/questions/27807925/color-ouput-with-swift-command-line-tool
 
 import Foundation
+
+
+public enum ANSIColor: UInt8 {
+    case black    = 30
+    case red      = 31
+    case green    = 32
+    case yellow   = 33
+    case blue     = 34
+    case magenta  = 35
+    case cyan     = 36
+    case white    = 37
+    case none     = 39
+}
+
+
+public enum ANSIStyle: UInt8 {
+    case none      = 0
+    case bold      = 1
+    case dim       = 2
+    case italic    = 3
+    case underline = 4
+    case blink     = 5
+}
+
+
+
 
 
 public extension String {
@@ -39,6 +67,14 @@ public extension String {
         var isDir : ObjCBool = false
         return fm.fileExists(atPath: self, isDirectory: &isDir)
     }
+    
+    // \u{001B}[\(attribute code like bold, dim, normal);\(color code)m
+    public func ansiFormatted(color: ANSIColor, style: ANSIStyle = .none) -> String {
+        let prefix: String = "\u{001B}["
+        let codes: [UInt8] = [color.rawValue, style.rawValue]
+        return "\(prefix)\(codes.map{String($0)}.joined(separator: ";"))m\(self)\(prefix)0m"
+    }
+    
 }
 
 
