@@ -7,23 +7,26 @@
 //
 
 import Foundation
-
-#if DEBUG
-dump(CommandLine.arguments)
-#endif
+import ArgumentParser
 
 
 let parser = ArgumentParser(CommandLine.arguments)
-parser.docString = "render the current scene"
+parser.docString = "render to an image file"
 
-let wo = IntegerOption(named: "width", required: true, helpString: "output image width", defaultValue: nil)
-let ho = IntegerOption(named: "height", required: true, helpString: "output image height", defaultValue: 200)
-let so = IntegerOption(named: "samples", flags: "s", "ns", required: true, helpString: "render samples", defaultValue: nil)
-let fo = StringOption(named: "output", flags: "f", required: false, helpString: "render file output name")
-let go = IntegerOption(named: "--glossy", flag: nil, required: true, helpString: "glossy samples", defaultValue: 50)
-go.metavar = "glossy samples"
 
-parser.addOptions(wo, ho, so, fo, go)
+let widthOption = IntegerOption(named: "width", required: true, helpString: "output image width", defaultValue: nil)
+let heightOption = IntegerOption(named: "height", required: true, helpString: "output image height", defaultValue: nil)
+let samplesOption = IntegerOption(named: "samples", flags: "s", "ns", required: true, helpString: "render samples", defaultValue: nil)
+let outputOption = StringOption(named: "output", flags: "f", required: false, helpString: "render file output name")
+let glossyOption = IntegerOption(named: "--glossy", flag: nil, required: true, helpString: nil, defaultValue: 50)
+glossyOption.metavar = "glossy samples"
+glossyOption.helpString = "glossy samples"
+
+
+if !parser.addOptions(widthOption, heightOption, samplesOption, outputOption, glossyOption) {
+    NSLog("Error adding options")
+    exit(1)
+}
 
 
 
@@ -34,20 +37,24 @@ func main() -> Int32 {
     do {
         let parsedArgs = try parser.parse()
         if parser.isValid {
+            print(parsedArgs)
             return 0
         }
+    } catch let error as ParsingError {
+        print(error.description)
+        return 2
+        
     } catch {
-        print("# Parsing error.")
-        parser.dump()
-        return 1
+        print("general error")
+        return 2
     }
-    print("\n# Error: parser not satisfied: ")
-    print("  " + parser.usageString)
-    parser.dump()
+
+    print("  " + parser.usageString + "\n")
+    for option in parser.invalidOptions {
+        print("   \(option.description)")
+    }
     return 1
 }
-
-
 
 
 exit(main())
