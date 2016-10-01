@@ -1,7 +1,0 @@
-language: swift
-osx_image: xcode8.0
-xcode_project: ArgumentParser.xcodeproj
-xcode_scheme: ArgumentParser
-branches:
-  except:
-    - develop

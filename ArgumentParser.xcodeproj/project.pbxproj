@@ -7,19 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3ED7E72D579E2D781C156114 /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = 3ED7EA44D52ACE8B15E7B71C /* TODO.md */; };
 		4C648C271ED38D6200F6D99B /* ArgumentParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C648C251ED38D6200F6D99B /* ArgumentParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C648C2B1ED38D8D00F6D99B /* ArgumentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* ArgumentParser.swift */; };
-		OBJ_22 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3ED7EA44D52ACE8B15E7B71C /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		4C648C231ED38D6200F6D99B /* ArgumentParser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArgumentParser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C648C251ED38D6200F6D99B /* ArgumentParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArgumentParser.h; sourceTree = "<group>"; };
-		4C648C261ED38D6200F6D99B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C648C251ED38D6200F6D99B /* ArgumentParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ArgumentParser.h; path = ArgumentParser/ArgumentParser.h; sourceTree = "<group>"; };
+		4C648C261ED38D6200F6D99B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ArgumentParser/Info.plist; sourceTree = "<group>"; };
 		4C9DB9041E7FED490024EC28 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		4CB79DDE1E7AE6F6001C8941 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		OBJ_10 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		OBJ_15 /* argparser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = argparser; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* ArgumentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgumentParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -32,25 +30,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_25 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C648C241ED38D6200F6D99B /* ArgumentParser */ = {
-			isa = PBXGroup;
-			children = (
-				4C648C251ED38D6200F6D99B /* ArgumentParser.h */,
-				4C648C261ED38D6200F6D99B /* Info.plist */,
-			);
-			path = ArgumentParser;
-			sourceTree = "<group>";
-		};
 		OBJ_13 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -61,7 +43,6 @@
 		OBJ_14 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_15 /* argparser */,
 				4C648C231ED38D6200F6D99B /* ArgumentParser.framework */,
 			);
 			name = Products;
@@ -74,9 +55,8 @@
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_13 /* Tests */,
-				OBJ_8 /* argparser */,
-				4C648C241ED38D6200F6D99B /* ArgumentParser */,
 				OBJ_14 /* Products */,
+				3ED7EA44D52ACE8B15E7B71C /* TODO.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,19 +64,11 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* ArgumentParser.swift */,
+				4C648C251ED38D6200F6D99B /* ArgumentParser.h */,
+				4C648C261ED38D6200F6D99B /* Info.plist */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
-		};
-		OBJ_8 /* argparser */ = {
-			isa = PBXGroup;
-			children = (
-				4CB79DDE1E7AE6F6001C8941 /* Info.plist */,
-				OBJ_10 /* main.swift */,
-			);
-			name = argparser;
-			path = Sources;
-			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -130,24 +102,6 @@
 			productReference = 4C648C231ED38D6200F6D99B /* ArgumentParser.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		OBJ_16 /* argparser */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_17 /* Build configuration list for PBXNativeTarget "argparser" */;
-			buildPhases = (
-				OBJ_20 /* Sources */,
-				OBJ_25 /* Frameworks */,
-				4CB79DDD1E7AE6B1001C8941 /* ShellScript */,
-				4C1C01251ED3ACEC0009AFB3 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = argparser;
-			productName = argparser;
-			productReference = OBJ_15 /* argparser */;
-			productType = "com.apple.product-type.tool";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -158,12 +112,7 @@
 				TargetAttributes = {
 					4C648C221ED38D6200F6D99B = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = 747QKN4G7U;
-						ProvisioningStyle = Automatic;
-					};
-					OBJ_16 = {
-						DevelopmentTeam = 747QKN4G7U;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -179,7 +128,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				OBJ_16 /* argparser */,
 				4C648C221ED38D6200F6D99B /* ArgumentParser */,
 			);
 		};
@@ -195,49 +143,13 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		4C1C01251ED3ACEC0009AFB3 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = env;
-		};
-		4CB79DDD1E7AE6B1001C8941 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "INSTALL_TARGET=\"${HOME}/bin/${TARGET_NAME}\"\n\nif [ \"$CONFIGURATION\" == \"Release\" ]; then\n    echo \"# installing: \\\"${INSTALL_TARGET}\\\"\"\n    cp \"${TARGET_BUILD_DIR}/${TARGET_NAME}\" \"${INSTALL_TARGET}\"\nelse\n    echo \"# Debug mode, skipping install.\"\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4C648C1E1ED38D6200F6D99B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4C648C2B1ED38D8D00F6D99B /* ArgumentParser.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		OBJ_20 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 0;
-			files = (
-				OBJ_22 /* main.swift in Sources */,
+				3ED7E72D579E2D781C156114 /* TODO.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,7 +159,7 @@
 		4C648C291ED38D6200F6D99B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -271,7 +183,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEPLOYMENT_LOCATION = YES;
-				DEVELOPMENT_TEAM = 747QKN4G7U;
+				DEVELOPMENT_TEAM = "";
 				DSTROOT = /;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -292,15 +204,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "ArgumentParser/**";
-				INFOPLIST_FILE = ArgumentParser/Info.plist;
+				HEADER_SEARCH_PATHS = "Sources/**";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/ArgumentParser/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermeerkat.ArgumentParser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -311,7 +224,7 @@
 		4C648C2A1ED38D6200F6D99B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -336,7 +249,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEPLOYMENT_LOCATION = YES;
-				DEVELOPMENT_TEAM = 747QKN4G7U;
+				DEVELOPMENT_TEAM = "";
 				DSTROOT = /;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -352,63 +265,20 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "ArgumentParser/**";
-				INFOPLIST_FILE = ArgumentParser/Info.plist;
+				HEADER_SEARCH_PATHS = "Sources/**";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/ArgumentParser/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /Library/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermeerkat.ArgumentParser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		OBJ_18 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = 747QKN4G7U;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks/**",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
-				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
-				TARGET_NAME = argparser;
-			};
-			name = Debug;
-		};
-		OBJ_19 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = 747QKN4G7U;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks/**",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
-				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
-				TARGET_NAME = argparser;
 			};
 			name = Release;
 		};
@@ -462,15 +332,6 @@
 			buildConfigurations = (
 				4C648C291ED38D6200F6D99B /* Debug */,
 				4C648C2A1ED38D6200F6D99B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		OBJ_17 /* Build configuration list for PBXNativeTarget "argparser" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				OBJ_18 /* Debug */,
-				OBJ_19 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

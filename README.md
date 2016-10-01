@@ -1,8 +1,34 @@
-# ArgumentParser
+![ArgumentParser](images/header-800x128.png)
 
-A simple framework for parsing command-line arguments in Swift. Modeled after the Python version. Build and import the framework to use with your `main.swift` file:
+A simple framework for parsing command-line arguments in Swift. Modeled after the Python version. 
+
+## Requirements
+
+- Swift 3.0
+- macOS 10.10+
+- Xcode 8
+
+## Installation
+
+### Carthage Installation
+
+Create a Cartfile in the root of your project:
+
+    github "mfessenden/ArgumentParser" ~> 1.0
+
+### CocoaPods Installation
+
+Add a reference in your podfile:
+
+    pod 'ArgumentParser', '~> 1.0'
+
+## Usage
+
+Build and import the framework to use with your `main.swift` file, or alternately add the `ArgumentParser.swift` file to your sources.
 
 ```swift
+// sample main.swift
+
 import Cocoa
 import ArgumentParser
 
@@ -15,8 +41,12 @@ let samplesOption = IntegerOption(named: "samples", flags: "s", "ns", required: 
 let outputOption = StringOption(named: "output", flags: "f", required: false, helpString: "render file output name")
 let glossyOption = IntegerOption(named: "--glossy", flag: nil, required: true, helpString: "glossy samples", defaultValue: 50)
 
-if !parser.addOptions(widthOption, heightOption, samplesOption, outputOption, glossyOption) {
-    NSLog("Error adding options")
+do {
+    try parser.addOptions(widthOption, heightOption, samplesOption, outputOption, glossyOption)
+} catch let error as ParsingError {
+    NSLog(error.description)
+    exit(1)
+} catch {
     exit(1)
 }
 
@@ -38,25 +68,21 @@ func main() -> Int32 {
 exit(main())
 ```
 
-### Usage
+### Setup
 
-Create an `ArgumentParser` object. You can create it with the current command-line options, or alternatively with a custom usage string and description.
+Create an `ArgumentParser` object with either the current command-line options, or a custom usage string and description:
 
 ```swift
-// create an ArgumentParser object from command-line arguments
+// create a parser from command-line arguments
 let parser = ArgumentParser(CommandLine.arguments)
-```
 
-It is also possible to create the parser with a description and (optional) usage string:
-
-
-```swift
+// create a parser without command line arguments
 let parser = ArgumentParser(desc: "render to an image file", usage: nil)
 ```
 
-#### Help
+### Help
 
-Formatted help & usage strings are created automatically for you. If you want to create a custom usage string for your parser, pass a string value to the parser when you initialize it.
+Formatted help & usage strings are created automatically for you after you've added your options. If you want to create a custom usage string for your parser, pass a string value to the parser when you initialize it.
 
 ```
 ❯ render -h                     
@@ -78,7 +104,7 @@ OPTIONAL ARGUMENTS:
   --glossy               glossy samples
 ```
 
-#### Adding Arguments
+### Adding Arguments
 
 Arguments are either **positional**, **required** or **optional**. Argument types include **string**, **boolean**, **integer** & **double**.
 
@@ -94,7 +120,7 @@ You don't need to instantiate arguments outside of the parser. Another way to ad
 
 ```swift
 
-if let heightOption = parser.addOption(named: "height", 
+if let heightOption = try parser.addOption(named: "height", 
                                         flag: nil, 
                                         optionType: .integer, 
                                         required: true, 
@@ -103,6 +129,9 @@ if let heightOption = parser.addOption(named: "height",
                                         
                                
     heightOption.helpString = "render output image height"
+   
+} catch error as ParsingError {
+    print(error.description)
 }
 ```
 
@@ -116,7 +145,7 @@ glossyOption.metavar = "glossy samples"
 render <width> <height> -s <samples>  -f <output>  <glossy samples>
 ```
 
-#### Parsing Values
+### Parsing Values
 
 
 To validate the parser and receive its values, call the `ArgumentParser.parse` method:
@@ -138,19 +167,3 @@ do {
     // deal with error
 }
 ```
-
-
-
-
-### Todo:
-
-- [ ] multiple values for arguments
-- [x] check for conflicting option
-- [ ] method to add an argument directly
-- [ ] `h` must be a protected flag
-- [ ] catch custom errors
-
-### References
-- [ArgumentParser: add argument](https://docs.python.org/2.7/library/argparse.html#the-add-argument-method)
-- [ArgumentParser: nargs](https://docs.python.org/2.7/library/argparse.html#nargs)
-

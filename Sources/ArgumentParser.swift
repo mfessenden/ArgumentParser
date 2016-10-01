@@ -20,7 +20,7 @@ public enum ParsingError: Error, CustomStringConvertible {
     public var description: String {
         switch self {
         case let .invalidValueType(option, optIndex):
-            return "Invalid argument type: \"\(option.name)\" at index: \(optIndex)"
+            return "Invalid value type: \"\(option.name)\" at index: \(optIndex)"
         case let .missingOptions(options):
             let optionsString = options.joined(separator: ", ")
             return "Missing required options: \(optionsString)."
@@ -34,6 +34,7 @@ public enum ParsingError: Error, CustomStringConvertible {
 
 public let shortPrefix = "-"
 public let longPrefix = "--"
+public let reservedFlags = ["h", "help"]
 
 
 // MARK: - Options
@@ -166,7 +167,7 @@ open class Option {
     convenience public init(named: String, flag: String?=nil, required: Bool=false, helpString: String?=nil) {
         self.init(named: named)
         
-        if let flagArg = flag {
+        if let flagArg = flag, !reservedFlags.contains(flagArg) {
             self.flags.append(flagArg)
         }
         self._isRequired = required
@@ -509,7 +510,7 @@ open class ArgumentParser {
         var positionalString = (positionalCount > 0) ? "\n\n\(posFormattedString): \n" : "\n"
         
         
-        let optionStrings = options.map { $0.usageString }
+        let optionStrings = _options.map { $0.usageString }
         
         var buffer = 5
         
@@ -771,6 +772,10 @@ open class ArgumentParser {
             }
         }
         
+        guard (isValid == true) else {
+            throw ParsingError.missingOptions(options: invalidOptions.map { $0.name })
+        }
+        
         return result
     }
     
@@ -787,7 +792,7 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Option?` option (if created).
      */
-    open func addOption(named: String, flags: String..., optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any?=nil) -> Option? {
+    open func addOption(named: String, flags: String..., optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any? = nil) throws -> Option? {
         let option = optionType.option.init(named: named)
         option.flags = flags
         option._isRequired = required
@@ -795,9 +800,16 @@ open class ArgumentParser {
         
         if let defaultValue = defaultValue {
             if !option.setDefaultValue(defaultValue) {
-                fatalError("incorrect type of default value passed: \(defaultValue)")
+                throw ParsingError.invalidValueType(option: option, optIndex: 0)
             }
         }
+        
+        if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name) {
+            throw ParsingError.conflictingOption(option: option.name)
+        }
+        
+        _options.append(option)
+        
         return option
     }
     
@@ -812,16 +824,22 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Option?` option (if created).
      */
-    open func addOption(named: String, flag: String?, optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any?=nil) -> Option? {
+    open func addOption(named: String, flag: String?, optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any? = nil) throws -> Option? {
         let option = optionType.option.init(named: named)
         option._isRequired = required
         option.helpString = helpString
         
         if let defaultValue = defaultValue {
             if !option.setDefaultValue(defaultValue) {
-                fatalError("incorrect type of default value passed: \(defaultValue)")
+                throw ParsingError.invalidValueType(option: option, optIndex: 0)
             }
         }
+        
+        if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name) {
+            throw ParsingError.conflictingOption(option: option.name)
+        }
+        
+        _options.append(option)
         return option
     }
     
@@ -833,10 +851,9 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Bool` add was successful.
      */
-    open func addOption(_ option: Option, required: Bool=false, defaultValue: Any?=nil) -> Bool {
+    open func addOption(_ option: Option, required: Bool=false, defaultValue: Any? = nil) throws -> Bool {
         if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name){
-            print("Option exists: \"\(option.name)\"")
-            return false
+            throw ParsingError.conflictingOption(option: option.name)
         }
         _options.append(option)
         option._isRequired = required
@@ -851,11 +868,10 @@ open class ArgumentParser {
      - parameter options:  `Option...` options to add.
      - returns: `Bool` add was successful.
      */
-    open func addOptions(_ options: Option...) -> Bool {
+    open func addOptions(_ options: Option...) throws -> Bool {
         for option in options {
             if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name) {
-                print("Option exists: \"\(option.name)\"")
-                return false
+                throw ParsingError.conflictingOption(option: option.name)
             }
             _options.append(option)
         }

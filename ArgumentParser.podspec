@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = "ArgumentParser"
-  s.version               = "0.50"
+  s.version               = "1.0"
   s.summary               = "A simple framework for parsing command-line arguments in Swift. Modeled after the Python version."
   s.author                = { "Michael Fessenden" => "michael.fessenden@gmail.com" }
   s.homepage              = "https://github.com/mfessenden/ArgumentParser"
