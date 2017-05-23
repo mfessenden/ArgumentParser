@@ -1,12 +1,19 @@
 ![ArgumentParser](images/header-800x128.png)
 
-A simple framework for parsing command-line arguments in Swift. Modeled after the Python version. 
+A simple framework for parsing command-line arguments in Swift. Modeled after the Python version.
+
+[![Swift Version][swift-image]][swift-url]
+[![Build Status][travis-image]][travis-url]
+[![License][license-image]][license-url]
+[![Platforms][platforms-image]][platforms-url]
+[![Carthage Compatible][carthage-image]][carthage-url]
 
 ## Requirements
 
-- Swift 3.0
+- Swift 3.1
 - macOS 10.10+
 - Xcode 8
+
 
 ## Installation
 
@@ -21,6 +28,7 @@ Create a Cartfile in the root of your project:
 Add a reference in your podfile:
 
     pod 'ArgumentParser', '~> 1.0'
+
 
 ## Usage
 
@@ -167,3 +175,14 @@ do {
     // deal with error
 }
 ```
+
+[swift-image]:https://img.shields.io/badge/Swift-3.1-brightgreen.svg
+[swift-url]: https://swift.org/
+[license-image]:https://img.shields.io/badge/License-MIT-blue.svg
+[license-url]:https://github.com/mfessenden/ArgumentParser/blob/master/LICENSE
+[travis-image]:https://travis-ci.org/mfessenden/ArgumentParser.svg
+[travis-url]:https://travis-ci.org/mfessenden/ArgumentParser
+[platforms-image]:https://img.shields.io/badge/platforms-macOS-red.svg
+[platforms-url]:http://www.apple.com
+[carthage-image]:https://img.shields.io/badge/Carthage-compatible-4BC51D.svg
+[carthage-url]:https://github.com/Carthage/Carthage
