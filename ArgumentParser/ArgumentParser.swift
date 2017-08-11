@@ -476,7 +476,7 @@ open class ArgumentParser {
     /**
      Initialize a parser with command-line arguments.
      
-     - parameter args:       `[String]` raw string arguments.
+     - parameter args:  `[String]` raw string arguments.
      */
     public init(_ args: [String]) {
         _rawArgs = args
@@ -1116,7 +1116,7 @@ public extension String {
 
 
 public extension Bool {
-    public init<T : Integer>(_ integer: T) {
+    public init<T : BinaryInteger>(_ integer: T) {
         self.init(integer != 0)
     }
     
@@ -1126,7 +1126,7 @@ public extension Bool {
 }
 
 
-public extension Integer {
+public extension BinaryInteger {
     public init(_ bool: Bool) {
         self = bool ? 1 : 0
     }

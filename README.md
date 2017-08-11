@@ -10,9 +10,9 @@ A simple framework for parsing command-line arguments in Swift. Modeled after th
 
 ## Requirements
 
-- Swift 3.1
+- Swift 4.0
 - macOS 10.10+
-- Xcode 8
+- Xcode 9
 
 
 ## Installation
@@ -176,7 +176,7 @@ do {
 }
 ```
 
-[swift-image]:https://img.shields.io/badge/Swift-3.1-brightgreen.svg
+[swift-image]:https://img.shields.io/badge/Swift-4.0-brightgreen.svg
 [swift-url]: https://swift.org/
 [license-image]:https://img.shields.io/badge/License-MIT-blue.svg
 [license-url]:https://github.com/mfessenden/ArgumentParser/blob/master/LICENSE
