@@ -1,5 +1,6 @@
+os: osx
 language: swift
-osx_image: xcode10.0
+osx_image: xcode10
 xcode_project: ArgumentParser.xcodeproj
 xcode_scheme: ArgumentParser
 branches:
