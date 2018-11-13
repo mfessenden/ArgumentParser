@@ -1,4 +1,4 @@
-![ArgumentParser](images/header-800x128.png)
+![ArgumentParser](Assets/header-800x128.png)
 
 A simple framework for parsing command-line arguments in Swift. Modeled after the Python version.
 
@@ -10,9 +10,9 @@ A simple framework for parsing command-line arguments in Swift. Modeled after th
 
 ## Requirements
 
-- Swift 3.1
-- macOS 10.10+
-- Xcode 8
+- Swift 4.2
+- macOS 10.12+
+- Xcode 10
 
 
 ## Installation
@@ -21,13 +21,13 @@ A simple framework for parsing command-line arguments in Swift. Modeled after th
 
 Create a Cartfile in the root of your project:
 
-    github "mfessenden/ArgumentParser" ~> 1.0
+    github "mfessenden/ArgumentParser" ~> 1.1
 
 ### CocoaPods Installation
 
 Add a reference in your podfile:
 
-    pod 'ArgumentParser', '~> 1.0'
+    pod 'ArgumentParser', '~> 1.1'
 
 
 ## Usage
@@ -100,12 +100,12 @@ OVERVIEW:  render to an image file
 
 USAGE:  render <width> <height> -s <samples>  -f <output>  <glossy>
 
-POSITIONAL ARGUMENTS: 
+POSITIONAL ARGUMENTS:
 
   width                  output image width
   height                 output image height
 
-OPTIONAL ARGUMENTS: 
+OPTIONAL ARGUMENTS:
 
   -s, -ns, --samples     render samples
   -f, --output           render file output name
@@ -128,16 +128,16 @@ You don't need to instantiate arguments outside of the parser. Another way to ad
 
 ```swift
 
-if let heightOption = try parser.addOption(named: "height", 
-                                        flag: nil, 
-                                        optionType: .integer, 
-                                        required: true, 
-                                        helpString: nil, 
+if let heightOption = try parser.addOption(named: "height",
+                                        flag: nil,
+                                        optionType: .integer,
+                                        required: true,
+                                        helpString: nil,
                                         defaultValue: 540) as? IntegerOption {
-                                        
-                               
+
+
     heightOption.helpString = "render output image height"
-   
+
 } catch error as ParsingError {
     print(error.description)
 }
@@ -176,7 +176,7 @@ do {
 }
 ```
 
-[swift-image]:https://img.shields.io/badge/Swift-3.1-brightgreen.svg
+[swift-image]:https://img.shields.io/badge/Swift-4.2-brightgreen.svg
 [swift-url]: https://swift.org/
 [license-image]:https://img.shields.io/badge/License-MIT-blue.svg
 [license-url]:https://github.com/mfessenden/ArgumentParser/blob/master/LICENSE

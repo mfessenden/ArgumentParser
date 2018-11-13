@@ -2,13 +2,33 @@
 //  ArgumentParser.swift
 //  ArgumentParser
 //
-//  Created by Michael Fessenden on 8/23/16.
+//  Created by Michael Fessenden.
 //  Copyright © 2016 Michael Fessenden. All rights reserved.
 //
-//  ANSI Formatting reference:
-//  http://stackoverflow.com/questions/27807925/color-ouput-with-swift-command-line-tool
+//	Web: https://github.com/mfessenden
+//	Email: michael.fessenden@gmail.com
+//
+//
+//	Permission is hereby granted, free of charge, to any person obtaining a copy
+//	of this software and associated documentation files (the "Software"), to deal
+//	in the Software without restriction, including without limitation the rights
+//	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//	copies of the Software, and to permit persons to whom the Software is
+//	furnished to do so, subject to the following conditions:
+//
+//	The above copyright notice and this permission notice shall be included in
+//	all copies or substantial portions of the Software.
+//
+//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//	THE SOFTWARE.
+	
 
-import Cocoa
+import Foundation
 
 
 public enum ParsingError: Error, CustomStringConvertible {
@@ -61,11 +81,11 @@ public enum NumArgs: String {
 }
 
 
-/** 
+/**
  Option base class. Not intended to be used directly.
  */
 open class Option {
-
+    
     internal var _name: String                      // option name
     internal var _isRequired: Bool = false          // is the option required?
     
@@ -126,8 +146,9 @@ open class Option {
     }
     
     // MARK: - Init
+    
     /**
-      Initialize a named option.
+     Initialize a named option.
      
      - parameter named: `String` argument name.
      */
@@ -440,7 +461,7 @@ open class ArgumentParser {
     internal var _usage: String? = nil                              // custom usage string
     
     open var docString: String = "(No description)"                 // parser help string
-
+    
     public var name: String {
         return self._executable ?? "(none)"
     }
@@ -517,7 +538,7 @@ open class ArgumentParser {
         if (hasOptions == true) {
             // get the largest string size
             let usageMax: Int = optionStrings.reduce(0, { (total: Int, val: String) -> Int in
-                return val.characters.count > total ? val.characters.count : total
+                return val.count > total ? val.count : total
             })
             
             buffer += usageMax
@@ -561,7 +582,7 @@ open class ArgumentParser {
         }
         return result
     }
-
+    
     
     // MARK: - Parsing
     /**
@@ -721,7 +742,7 @@ open class ArgumentParser {
                 
                 if option.type == .bool {
                     if let boolOption = option as? BoolOption {
-
+                        
                         guard (boolOption.setValue(narg) == true) else {
                             throw ParsingError.invalidValueType(option: boolOption, optIndex: nidx)
                         }
@@ -792,6 +813,7 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Option?` option (if created).
      */
+    @discardableResult
     open func addOption(named: String, flags: String..., optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any? = nil) throws -> Option? {
         let option = optionType.option.init(named: named)
         option.flags = flags
@@ -824,6 +846,7 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Option?` option (if created).
      */
+    @discardableResult
     open func addOption(named: String, flag: String?, optionType: OptionType, required: Bool, helpString: String?, defaultValue: Any? = nil) throws -> Option? {
         let option = optionType.option.init(named: named)
         option._isRequired = required
@@ -851,6 +874,7 @@ open class ArgumentParser {
      - parameter defaultValue:  `Any?` optional default value.
      - returns: `Bool` add was successful.
      */
+    @discardableResult
     open func addOption(_ option: Option, required: Bool=false, defaultValue: Any? = nil) throws -> Bool {
         if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name){
             throw ParsingError.conflictingOption(option: option.name)
@@ -868,6 +892,7 @@ open class ArgumentParser {
      - parameter options:  `Option...` options to add.
      - returns: `Bool` add was successful.
      */
+    @discardableResult
     open func addOptions(_ options: Option...) throws -> Bool {
         for option in options {
             if option.name == "help" || option.flags.contains("h") || hasOption(flag: option.name) {
@@ -949,7 +974,7 @@ open class ArgumentParser {
         
         return values
     }
-
+    
     
     // MARK: - Help
     
@@ -1086,7 +1111,7 @@ public extension String {
     public func zfill(length: Int, buffer: String=" ") -> String {
         if length < 0 { return "" }
         var filler = ""
-        for _ in 0..<(length - self.characters.count) {
+        for _ in 0..<(length - self.count) {
             filler += buffer
         }
         return self + filler
@@ -1116,7 +1141,7 @@ public extension String {
 
 
 public extension Bool {
-    public init<T : Integer>(_ integer: T) {
+    public init<T : BinaryInteger>(_ integer: T) {
         self.init(integer != 0)
     }
     
@@ -1126,7 +1151,7 @@ public extension Bool {
 }
 
 
-public extension Integer {
+public extension BinaryInteger {
     public init(_ bool: Bool) {
         self = bool ? 1 : 0
     }
