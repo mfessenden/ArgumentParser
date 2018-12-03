@@ -58,9 +58,9 @@
 		4CFE6786219B567400D8D4F2 = {
 			isa = PBXGroup;
 			children = (
-				4CFFC135219B58DA007A5156 /* LICENSE */,
 				4CFFC136219B58DA007A5156 /* README.md */,
 				4CFFC137219B591D007A5156 /* CHANGELOG.md */,
+				4CFFC135219B58DA007A5156 /* LICENSE */,
 				4CFE67AA219B569A00D8D4F2 /* Sources */,
 				4CFE6792219B567400D8D4F2 /* macOS */,
 				4CFE679D219B567400D8D4F2 /* Tests */,
@@ -357,6 +357,7 @@
 		4CFE67A5219B567400D8D4F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -374,6 +375,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermeerkat.ArgumentParser;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -386,6 +388,7 @@
 		4CFE67A6219B567400D8D4F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -403,6 +406,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermeerkat.ArgumentParser;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

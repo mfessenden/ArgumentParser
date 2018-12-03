@@ -711,7 +711,7 @@ open class ArgumentParser {
             }
         }
         
-        // return if help in enacted
+        // return if help is enacted
         if _helpMode == true { return [:] }
         
         

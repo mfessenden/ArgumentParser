@@ -23,12 +23,6 @@ Create a Cartfile in the root of your project:
 
     github "mfessenden/ArgumentParser" ~> 1.1
 
-### CocoaPods Installation
-
-Add a reference in your podfile:
-
-    pod 'ArgumentParser', '~> 1.1'
-
 
 ## Usage
 
